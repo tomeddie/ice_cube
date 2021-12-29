@@ -19,6 +19,9 @@ module IceCube
           next if segments.empty?
           current = self.class.sentence(segments)
         end
+        puts "current is #{current}"
+        puts "type is #{type}"
+        puts "string is #{string}"
         f = IceCube::I18n.t("ice_cube.string.format")[type] ? type : "default"
         string = IceCube::I18n.t("ice_cube.string.format.#{f}", rest: string, current: current)
       end

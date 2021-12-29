@@ -51,6 +51,7 @@ en:
       one: Yearly
       other: Every %{count} years
     'on': on the %{sentence}
+    'that_are': that are the %{sentence}
     in: 'in %{target}'
     integer:
       negative: '%{ordinal} to last'

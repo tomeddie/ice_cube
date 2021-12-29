@@ -200,6 +200,67 @@ describe IceCube::Schedule, "to_s" do
       schedule.add_recurrence_rule IceCube::Rule.weekly.count(2)
       expect(schedule.to_s).to eq("Weekly 2 times")
     end
+
+    it "should convert Daily RRule to human readable text" do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=DAILY;INTERVAL=1;WKST=SU')
+      expect(schedule.to_s).to eq("Daily")
+    end
+
+    it 'should convert Monthly on last day of month to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYMONTHDAY=-1,-2,-3;BYSETPOS=-1;WKST=SU')
+      #schedule.each_occurrence { |t| puts t }
+      expect(schedule.to_s).to eq("Monthly on the last day of the month")
+    end
+
+    it 'should convert Monthly on the 30th day of the month on Weekdays to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYMONTHDAY=30,29,28,27,26;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR;WKST=SU')
+      expect(schedule.to_s).to eq("Monthly on the 30th day of the month on Weekdays")
+    end
+
+    it 'should convert Monthly on the 13th day of the month on Weekdays to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYMONTHDAY=13,14,15;BYSETPOS=1;BYDAY=MO,TU,WE,TH,FR;WKST=SU')
+      expect(schedule.to_s).to eq("Monthly on the 13th day of the month on Weekdays")
+    end
+
+    it 'should convert Monthly on the last and 2nd to last Tuesdays to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYDAY=TU;BYSETPOS=-1,-2;WKST=SU')
+      expect(schedule.to_s).to eq("Monthly on the last and 2nd to last Tuesdays")
+    end
+
+    it 'should convert Monthly on the 2nd Monday to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=2;WKST=SU')
+      expect(schedule.to_s).to eq("Monthly on the 2nd Monday")
+    end
+
+    it 'should convert Monthly on the last Monday to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYDAY=MO;BYSETPOS=-1;WKST=SU')
+      expect(schedule.to_s).to eq("Monthly on the last Monday")
+    end
+
+    it 'should convert Yearly in February on the 28th of the month to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=28,27,26;BYSETPOS=-1;WKST=SU')
+      expect(schedule.to_s).to eq("Yearly in February on the 28th of the month")
+    end
+
+    it 'should convert Yearly in February on the 28th of the month on Weekdays to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=28,27,26;BYSETPOS=-1;BYDAY=MO,TU,WE,TH,FR;WKST=SU')
+      expect(schedule.to_s).to eq("Yearly in February on the 28th of the month on Weekdays")
+    end
+
+    it 'should convert Quarterly, Q1 and Q2 to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYMONTH=1,4;BYMONTHDAY=1;WKST=SU')
+      expect(schedule.to_s).to eq("Quarterly, Q1 and Q2, weekdays (Following Monday)")
+    end
+
+    it 'should convert Quarterly, Q1 and Q2, weekdays (Following Monday) to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYMONTH=1,4;BYMONTHDAY=1,2,3;BYSETPOS=1;WKST=SU')
+      expect(schedule.to_s).to eq("Quarterly, Q1 and Q2")
+    end
+
+    it 'should convert Every other day weekdays only to human readable text' do
+      schedule = IceCube::Schedule.from_ical('RRULE:FREQ=DAILY;INTERVAL=2;BYDAY=MO,TU,WE,TH,FR;WKST=SU')
+      expect(schedule.to_s).to eq("Every other day weekdays only")
+    end
   end
 
   context "without I18n" do

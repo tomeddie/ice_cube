@@ -45,9 +45,14 @@ module IceCube
       end
 
       StringBuilder.register_formatter(:day_of_month) do |entries|
-        sentence = StringBuilder.sentence(entries)
-        str = IceCube::I18n.t("ice_cube.days_of_month", count: entries.size, segments: sentence)
-        IceCube::I18n.t("ice_cube.on", sentence: str)
+        if ValidatedRule.validations_for(:by_set_pos).empty?
+          sentence = StringBuilder.sentence(entries)
+          str = IceCube::I18n.t("ice_cube.days_of_month", count: entries.size, segments: sentence)
+          IceCube::I18n.t("ice_cube.on", sentence: str)
+        elsif
+          puts "we are in the special area"
+        end
+
       end
     end
   end
